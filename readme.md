@@ -15,8 +15,14 @@ This template has been updated for:
 ![screenshot](screenshot.png)
 
 ## Requirements
+- git
+- [Node.js](https://nodejs.org) is required to install dependencies and run scripts via `npm`.
 
-[Node.js](https://nodejs.org) is required to install dependencies and run scripts via `npm`.
+### Quick tutorials
+
+- Quick git overview: <https://rogerdudler.github.io/git-guide/>
+- Quick JavaScript tutorial: <https://learnxinyminutes.com/javascript/>
+- Quick TypeScript tutorial: <https://learnxinyminutes.com/typescript>
 
 ## Available Commands
 
