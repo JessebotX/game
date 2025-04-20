@@ -42,3 +42,5 @@ A 2d rogue-like shooter
   (*make frequent commits and pushes*)
 7. When you have completed your feature, merge the branch back into
    the `mother` branch
+8. Fix any merge conflicts, run development server (`npm run dev`) to
+   make sure it still works, then push changes to `mother` branch
