@@ -25,7 +25,20 @@ export class MainMenu extends Scene {
             })
             .setOrigin(0.5);
 
-        this.input.once('pointerdown', () => {
+        const startButton = this.add
+            .text(512, 460, 'Start', {
+            fontFamily: 'Arial Black',
+            fontSize: 38,
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 8,
+            align: 'center',
+            })
+            .setOrigin(0.5, -1);
+
+        startButton.setInteractive();
+
+        startButton.on('pointerdown', () => {
             this.scene.start('Game');
         });
     }

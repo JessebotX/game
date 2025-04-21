@@ -27,6 +27,9 @@ export class Preloader extends Scene {
         this.load.setPath('assets');
 
         this.load.image('logo', 'logo.png');
+        this.load.image('ship', './Player/Ship.png');
+        this.load.image('shipBooster1', './Player/ShipBoost1.png');
+        this.load.image('shipBooster2', './Player/ShipBoost2.png');
     }
 
     create() {
