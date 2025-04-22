@@ -10,12 +10,12 @@ export class MainMenu extends Scene {
     }
 
     create() {
-        this.background = this.add.image(512, 384, 'background');
+        this.background = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'background');
 
-        this.logo = this.add.image(512, 300, 'logo');
+        this.logo = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'logo');
 
         this.title = this.add
-            .text(512, 460, 'Main Menu', {
+            .text(this.cameras.main.width / 2, this.cameras.main.height / 2 + 100, 'Main Menu', {
                 fontFamily: 'Arial Black',
                 fontSize: 38,
                 color: '#ffffff',
@@ -26,7 +26,7 @@ export class MainMenu extends Scene {
             .setOrigin(0.5);
 
         const startButton = this.add
-            .text(512, 460, 'Start', {
+            .text(this.cameras.main.width / 2, this.cameras.main.height / 2+ 200, 'Start', {
             fontFamily: 'Arial Black',
             fontSize: 38,
             color: '#ffffff',
@@ -34,7 +34,7 @@ export class MainMenu extends Scene {
             strokeThickness: 8,
             align: 'center',
             })
-            .setOrigin(0.5, -1);
+            .setOrigin(0.5, 0.5);
 
         startButton.setInteractive();
 
@@ -42,4 +42,6 @@ export class MainMenu extends Scene {
             this.scene.start('Game');
         });
     }
+
+    
 }
