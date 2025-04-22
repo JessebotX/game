@@ -11,14 +11,14 @@ export class Game extends Scene {
 
     create() {
         this.camera = this.cameras.main;
-        this.camera.setBackgroundColor(0x00ff00);
+        this.camera.setBackgroundColor(0x000000);
 
-        this.background = this.add.image(512, 384, 'background');
+        this.background = this.add.image(1024, 768, 'background');
         this.background.setAlpha(0.5);
 
         this.msg_text = this.add.text(
-            512,
-            384,
+            1024,
+            1080,
             'Make something fun!\nand share it with us:\nsupport@phaser.io',
             {
                 fontFamily: 'Arial Black',
@@ -30,6 +30,8 @@ export class Game extends Scene {
             },
         );
         this.msg_text.setOrigin(0.5);
+
+
 
         this.input.once('pointerdown', () => {
             this.scene.start('GameOver');
