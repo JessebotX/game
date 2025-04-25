@@ -1,3 +1,5 @@
+import { Cannon } from './Cannon';
+
 export class Player extends Phaser.GameObjects.Sprite {
     private velocity: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0, 0);
     private maxVelocity: number = 800;
@@ -5,6 +7,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     private accelerationRate: number = 300;
     private direction: Phaser.Math.Vector2;
     private rotationRate: number = 3;
+    private cannon: Cannon;
 
     constructor(
         scene: Phaser.Scene,
@@ -14,7 +17,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     ) {
         // Set up sprite display
         const hitbox = new Phaser.Geom.Triangle();
-        super(scene, x, y, 'shipSheet', 'shipIdle');
+        super(scene, x, y, 'shipSheet');
         this.scene.anims.create({
             key: 'boost',
             frames: this.scene.anims.generateFrameNames('shipSheet', {
@@ -58,6 +61,16 @@ export class Player extends Phaser.GameObjects.Sprite {
             Math.cos(this.rotation),
             Math.sin(this.rotation),
         );
+
+        this.cannon = new Cannon(scene, x, y);
+    }
+
+    public aimCannon(angle: number) {
+        this.cannon.setRotation(angle);
+    }
+
+    public getCannonAngle(): number {
+        return this.cannon.rotation;
     }
 
     /**
@@ -110,6 +123,8 @@ export class Player extends Phaser.GameObjects.Sprite {
     public move(delta: number) {
         this.x += (this.velocity.x * delta) / 1000;
         this.y += (this.velocity.y * delta) / 1000;
+        this.cannon.x += (this.velocity.x * delta) / 1000;
+        this.cannon.y += (this.velocity.y * delta) / 1000;
     }
 
     addedToScene(): void {

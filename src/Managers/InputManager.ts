@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { Player } from '../Objects/Player';
 
 export class InputManager {
     private scene: Phaser.Scene;
@@ -8,6 +9,7 @@ export class InputManager {
     private keyD?: Phaser.Input.Keyboard.Key;
     private pointer: Phaser.Input.Pointer;
     private gamepad?: Phaser.Input.Gamepad.Gamepad;
+    private aimingMethod: 'mouse' | 'gamepad' = 'mouse';
 
     constructor(scene: Phaser.Scene) {
         // Getting scene to apply input for
@@ -40,6 +42,10 @@ export class InputManager {
                 this.gamepad = pad;
             }
         }
+
+        scene.input.on('pointermove', () => {
+            this.aimingMethod = 'mouse';
+        });
     }
 
     /**
@@ -67,12 +73,29 @@ export class InputManager {
     }
 
     /**
-     * **UNIMPLEMENTED** Determines the angle which the player's weapon should be aimed using either a mouse or joystick, may need to be moved out of class
+     * Determines the angle which the player's weapon should be aimed using either a mouse or joystick, may need to be moved out of class
      *
      * @returns Angle in radians of where the weapon should be aimed
      */
-    weaponAngle(): number {
-        return 0;
+    weaponAngle(player: Player): number | null {
+        if (this.aimingMethod === 'mouse') {
+            if ((this.gamepad?.rightStick.length() ?? 0) > 0.1)
+                this.aimingMethod = 'gamepad';
+            const worldPointer = this.pointer.positionToCamera(
+                this.scene.cameras.main,
+            ) as Phaser.Math.Vector2;
+            return Phaser.Math.Angle.Between(
+                player.x,
+                player.y,
+                worldPointer.x,
+                worldPointer.y,
+            );
+        } else if (
+            this.aimingMethod === 'gamepad' &&
+            (this.gamepad?.rightStick.length() ?? 0) > 0.1
+        ) {
+            return this.gamepad?.rightStick.angle() ?? 0;
+        } else return null;
     }
 
     /**
@@ -172,5 +195,13 @@ export class InputManager {
      */
     private getGamepadLeftAxisY(): number {
         return this.gamepad?.axes[1].getValue() ?? 0;
+    }
+
+    private getGamepadRightAxisX(): number {
+        return this.gamepad?.axes[2].getValue() ?? 0;
+    }
+
+    private getGamepadRightAxisY(): number {
+        return this.gamepad?.axes[3].getValue() ?? 0;
     }
 }

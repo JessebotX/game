@@ -44,5 +44,9 @@ export class Game extends Scene {
 
         this.player.rotate(this.inputManager.getRotateValue(), delta);
         this.player.move(delta);
+        this.player.aimCannon(
+            this.inputManager.weaponAngle(this.player) ??
+                this.player.getCannonAngle(),
+        );
     }
 }

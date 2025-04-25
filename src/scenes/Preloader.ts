@@ -31,6 +31,8 @@ export class Preloader extends Scene {
             './Player/Ship-SpriteSheet.png',
             './Player/Ship-SpriteSheet.json',
         );
+        this.load.image('cannon', './Player/Cannon.png');
+
         this.load.image('logo', 'logo.png');
     }
 
