@@ -1,9 +1,13 @@
 import { Scene } from 'phaser';
+import { Player } from '../Objects/Player';
+import { InputManager } from '../Managers/InputManager';
 
 export class Game extends Scene {
     camera: Phaser.Cameras.Scene2D.Camera;
-    background: Phaser.GameObjects.Image;
+    background: Phaser.GameObjects.TileSprite;
+    inputManager: InputManager;
     msg_text: Phaser.GameObjects.Text;
+    player: Player;
 
     constructor() {
         super('Game');
@@ -11,28 +15,38 @@ export class Game extends Scene {
 
     create() {
         this.camera = this.cameras.main;
-        this.camera.setBackgroundColor(0x00ff00);
+        this.camera.setBackgroundColor(0x000000);
 
-        this.background = this.add.image(512, 384, 'background');
-        this.background.setAlpha(0.5);
+        this.background = this.add
+            .tileSprite(
+                this.camera.midPoint.x,
+                this.camera.midPoint.y,
+                this.camera.width,
+                this.camera.height,
+                'background',
+            )
+            .setOrigin(0.5, 0.5)
+            .setScrollFactor(0);
 
-        this.msg_text = this.add.text(
-            512,
-            384,
-            'Make something fun!\nand share it with us:\nsupport@phaser.io',
-            {
-                fontFamily: 'Arial Black',
-                fontSize: 38,
-                color: '#ffffff',
-                stroke: '#000000',
-                strokeThickness: 8,
-                align: 'center',
-            },
+        this.inputManager = new InputManager(this);
+
+        this.player = new Player(this, 0, 0);
+        this.camera.startFollow(this.player, true, 1, 1);
+    }
+
+    update(time: number, delta: number): void {
+        this.background.tilePositionX = this.camera.scrollX;
+        this.background.tilePositionY = this.camera.scrollY;
+
+        // Handles acceleratio
+        if (this.inputManager.isAccelerating()) this.player.accelerate(delta);
+        else this.player.stopAccelerate();
+
+        this.player.rotate(this.inputManager.getRotateValue(), delta);
+        this.player.move(delta);
+        this.player.aimCannon(
+            this.inputManager.weaponAngle(this.player) ??
+                this.player.getCannonAngle(),
         );
-        this.msg_text.setOrigin(0.5);
-
-        this.input.once('pointerdown', () => {
-            this.scene.start('GameOver');
-        });
     }
 }
