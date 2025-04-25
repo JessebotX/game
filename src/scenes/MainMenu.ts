@@ -7,6 +7,7 @@ var asteroids;
 
 export class MainMenu extends Scene {
     private player!: Player;
+    private planet!: Planet;
     camera: Phaser.Cameras.Scene2D.Camera;
 
     background: GameObjects.Image;
@@ -74,6 +75,15 @@ export class MainMenu extends Scene {
             repeat: -1
         });
 
+        var planet = this.physics.add.staticGroup();
+
+        const b = planet.create(0, 0, "Planet");
+        b.setMass(15);
+        b.setCircle(24, 0, 0);
+        b.refreshBody();
+
+
+
         asteroids = this.physics.add.group({
             collideWorldBounds: true,
             // bounceX: 0.3,
@@ -91,6 +101,7 @@ export class MainMenu extends Scene {
             a.setAngularVelocity(Phaser.Math.Between(-25, 25) * 2);
             a.setScale(0.5*Mass + 0.5)
             a.Mass = Mass;
+            a.setCircle(0.5*Mass + 0.5 + 1, 0, 0);
             a.refreshBody();
         }
 
@@ -98,11 +109,17 @@ export class MainMenu extends Scene {
             this.deflectFromImpact(asteroid1, asteroid2, 100);
             this.deflectFromImpact(asteroid2, asteroid1, 100);
         })
+        this.physics.add.collider(asteroids, planet, (asteroid1, planet) => {
+            this.deflectFromImpact(planet, asteroid1, 100);
+        })
 
         this.physics.add.collider(this.player, asteroids, (playerObj, rock) => {
             playerObj.setAcceleration(0, 0);
             this.deflectFromImpact(playerObj, rock, 100);
             this.deflectFromImpact(rock, playerObj, 25);
+        })
+
+        this.physics.add.collider(this.player, planet, (playerObj, rock) => {
         })
 
         this.cameras.main.startFollow(this.player);
@@ -146,6 +163,41 @@ export class MainMenu extends Scene {
 
         if (this.player.body.velocity > 0) {
             this.player.body.velocity.normalize().scale(100);
+        }
+
+        const dx = this.planet.x - this.player.x;
+        const dy = this.planet.y - this.player.y;
+        const distSq = dx * dx + dy * dy;
+      
+        // avoid super huge forces at very close range:
+        const minDistance = 50;
+        if (distSq > minDistance * minDistance) {
+          // G is your “gravitational constant” tweakable to taste:
+          const G = 50000;
+      
+          // Newton’s law: F = G * (m1*m2) / r^2
+          // Since planet is static, just do F ∝ 1/r^2:
+          const force = G / distSq;
+      
+          // direction toward the planet:
+          const angle = Math.atan2(dy, dx);
+      
+          // convert force → acceleration (a = F/m). If your ship.mass is 1, you can skip dividing.
+          const ax = Math.cos(angle) * force;
+          const ay = Math.sin(angle) * force;
+      
+          this.player.body.setAcceleration(ax, ay);
+        } else {
+          // if you’re too close, don’t keep zooming acceleration up
+          this.player.body.setAcceleration(0, 0);
+        }
+      
+        // — optional: cap top speed so gravity doesn’t launch you past your max —
+        const maxSpeed = 200;
+        if (this.player.body.velocity.length() > maxSpeed) {
+          this.player.body.velocity
+            .normalize()
+            .scale(maxSpeed);
         }
         // this.game.physics.arcade.collide
     }

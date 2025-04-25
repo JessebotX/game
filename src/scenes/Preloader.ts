@@ -32,6 +32,8 @@ export class Preloader extends Scene {
         this.load.image('ShipBoost1', 'ShipBoost1.png');
         this.load.image('ShipBoost2', 'ShipBoost2.png');
 
+        this.load.image("Planet", "planet.png");
+
         this.load.image('Stars', 'Stars.png');
 
         this.load.spritesheet("ShipFrames",
