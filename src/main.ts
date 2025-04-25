@@ -14,6 +14,9 @@ const config: Types.Core.GameConfig = {
     height: 1080,
     parent: 'game-container',
     backgroundColor: '#000000',
+    input: {
+        gamepad: true,
+    },
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,

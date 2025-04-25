@@ -26,7 +26,11 @@ export class Preloader extends Scene {
         //  Load the assets for the game - Replace with your own assets
         this.load.setPath('assets');
 
-        this.load.atlas('shipSheet', './Player/Ship-SpriteSheet.png', './Player/Ship-SpriteSheet.json');
+        this.load.atlas(
+            'shipSheet',
+            './Player/Ship-SpriteSheet.png',
+            './Player/Ship-SpriteSheet.json',
+        );
         this.load.image('logo', 'logo.png');
     }
 
