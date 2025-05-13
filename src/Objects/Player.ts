@@ -3,6 +3,7 @@ import { Cannon } from './Cannon';
 export class Player extends Phaser.GameObjects.Sprite {
     private velocity: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0, 0);
     private maxVelocity: number = 800;
+    private minimumVelocity: number = 0;
     private acceleration: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0, 0);
     private accelerationRate: number = 300;
     private direction: Phaser.Math.Vector2;
@@ -97,8 +98,22 @@ export class Player extends Phaser.GameObjects.Sprite {
     /**
      * Plays the idle animation for our player
      */
-    public stopAccelerate() {
+    public deaccelerate(delta: number) {
         this.anims.play('idle', true);
+    
+        if (this.velocity.length() > 0) {
+            // Compute a deceleration vector opposite to current velocity
+            const decelerationVector = this.velocity.clone()
+                .normalize()
+                .scale((this.accelerationRate * delta) / 1000);
+    
+            this.velocity.subtract(decelerationVector);
+    
+            // Stop the ship if it's nearly stopped
+            if (this.velocity.length() < 2.5) {
+                this.velocity.set(0, 0);
+            }
+        }
     }
 
     /**

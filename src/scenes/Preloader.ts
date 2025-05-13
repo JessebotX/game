@@ -34,6 +34,11 @@ export class Preloader extends Scene {
         this.load.image('cannon', './Player/Cannon.png');
 
         this.load.image('logo', 'logo.png');
+
+        this.load.image('up', './TouchControls/up.png');
+        this.load.image('down','./TouchControls/down.png');
+        this.load.image('right', './TouchControls/right.png');
+        this.load.image('left', './TouchControls/left.png');
     }
 
     create() {
