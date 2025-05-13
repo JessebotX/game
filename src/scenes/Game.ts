@@ -35,12 +35,17 @@ export class Game extends Scene {
     }
 
     update(time: number, delta: number): void {
+
+        // Handles acceleratiom
+        if (this.inputManager.isAccelerating()){
+            this.player.accelerate(delta);        }
+        else if (this.inputManager.stopAccelerate()){
+            this.player.deaccelerate(delta); 
+        } 
+
+        //updating the background
         this.background.tilePositionX = this.camera.scrollX;
         this.background.tilePositionY = this.camera.scrollY;
-
-        // Handles acceleratio
-        if (this.inputManager.isAccelerating()) this.player.accelerate(delta);
-        else this.player.stopAccelerate();
 
         this.player.rotate(this.inputManager.getRotateValue(), delta);
         this.player.move(delta);
